@@ -12,14 +12,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import lv.myapp.practicalwork2.ui.theme.PracticalWork2Theme
 import androidx.compose.ui.unit.dp
-import android.content.Intent;
+import android.content.Intent
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +36,17 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val context = LocalContext.current
+    // manage dialog state
+    // changes to the variable force recomposition of composables that use it
+    val showDialog = remember { mutableStateOf(false) }
+
+    if (showDialog.value) {
+        Dialog(
+            onDismissRequest = { showDialog.value = false },
+            dialogTitle = "#4 Group's Dialog",
+            onConfirmation = { showDialog.value = false }
+        )
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column (
@@ -48,27 +59,25 @@ fun MainScreen() {
                     context.startActivity(Intent(context, SecondActivity::class.java))
                 }
             )
-            DialogBtn {
-                    Dialog(){}
-            }
+            DialogBtn (
+                onClick = {
+                    showDialog.value = true
+                }
+            )
         }
     }
 }
 
 @Composable
 fun SecondActivityBtn(onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-    ) {
+    Button(onClick = onClick) {
         Text(text = "Go to 2-nd")
     }
 }
 @Composable
 fun DialogBtn(onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-    ) {
-        Text(text = "4. Group's Dialog")
+    Button(onClick = onClick) {
+        Text(text = "Dialog")
     }
 }
 
@@ -76,19 +85,11 @@ fun DialogBtn(onClick: () -> Unit) {
 fun Dialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
-    dialogTitle: String,
-    dialogText: String,
-    icon: ImageVector,
+    dialogTitle: String
 ) {
     AlertDialog(
-        icon = {
-            Icon(icon, contentDescription = "Example Icon")
-        },
         title = {
             Text(text = dialogTitle)
-        },
-        text = {
-            Text(text = dialogText)
         },
         onDismissRequest = {
             onDismissRequest()
@@ -99,7 +100,7 @@ fun Dialog(
                     onConfirmation()
                 }
             ) {
-                Text("Confirm")
+                Text("OK")
             }
         },
         dismissButton = {
@@ -108,7 +109,7 @@ fun Dialog(
                     onDismissRequest()
                 }
             ) {
-                Text("Dismiss")
+                Text("Close")
             }
         }
     )
