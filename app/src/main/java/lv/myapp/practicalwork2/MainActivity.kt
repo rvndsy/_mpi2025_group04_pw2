@@ -18,10 +18,13 @@ import androidx.compose.ui.platform.LocalContext
 import lv.myapp.practicalwork2.ui.theme.PracticalWork2Theme
 import androidx.compose.ui.unit.dp
 import android.content.Intent
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
@@ -44,13 +47,27 @@ fun MainScreen() {
     // changes to the variable force recomposition of composables that use it
     // use by instead of = to preserve the type and not have to do .value
     var showDialog by remember { mutableStateOf(false) }
+    var checked1 by remember { mutableStateOf(false) }
+    var checked2 by remember { mutableStateOf(false) }
 
     if (showDialog) {
         Dialog (
             onDismissRequest = { showDialog = false },
             dialogTitle = "#4 Group's Dialog",
             onConfirmation = { showDialog = false }
-        )
+        ) {
+            DialogContent(
+                checked1 = checked1,
+                checked2 = checked2,
+                onChecked1Change = {
+                    // "it" is the default arg of 1 arg lambdas
+                    checked1 = it
+                },
+                onChecked2Change = {
+                    checked2 = it
+                }
+            )
+        }
     }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -90,42 +107,64 @@ fun DialogBtn(onClick: () -> Unit) {
 fun Dialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
-    dialogTitle: String
+    dialogTitle: String,
+    // trailing lambda syntax
+    content: @Composable () -> Unit = {}
 ) {
     AlertDialog(
-        title = {
-            Text(text = dialogTitle)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                }
-            ) {
+        title = { Text(text = dialogTitle) },
+        onDismissRequest = { onDismissRequest() },
+        confirmButton = { TextButton(onClick = { onConfirmation() })
+            {
                 Text("OK")
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
+        dismissButton = { TextButton(onClick = { onDismissRequest() })
+            {
                 Text("Close")
             }
-        }
+        },
+        text = { content() }
     )
+}
+
+@Composable
+fun DialogContent(
+    checked1: Boolean,
+    checked2: Boolean,
+    onChecked1Change: (Boolean) -> Unit,
+    onChecked2Change: (Boolean) -> Unit
+) {
+    Column {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = checked1,
+                onCheckedChange = onChecked1Change
+            )
+            Text("Ričards Didriksons")
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = checked2,
+                onCheckedChange = onChecked2Change
+            )
+            Text("Elvis Ritiņš")
+        }
+    }
 }
 
 @Composable
 @Preview
 fun DialogPreview() {
-    Dialog(
+    Dialog (
         onDismissRequest = {},
         onConfirmation = {},
-        dialogTitle = "Preview"
+        dialogTitle = "Preview",
+        content = { DialogContent(
+            checked1 = false,
+            checked2 = true,
+            onChecked1Change = {},
+            onChecked2Change = {}
+        ) }
     )
 }
