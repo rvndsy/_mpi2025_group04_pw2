@@ -48,7 +48,9 @@ fun SecondScreen() {
             Text("2-nd Activity", fontSize = 24.sp, modifier=Modifier.padding(16.dp))
             BackBtn (
                 onClick = {
-                    context.startActivity(Intent(context, MainActivity::class.java))
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
                 }
             )
         }
