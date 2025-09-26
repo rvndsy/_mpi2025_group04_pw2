@@ -19,6 +19,7 @@ import lv.myapp.practicalwork2.ui.theme.PracticalWork2Theme
 import androidx.compose.ui.unit.dp
 import android.content.Intent
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.getValue
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,8 +87,11 @@ fun MainScreen() {
         Column (
             modifier = Modifier
                 .padding(paddingValues = innerPadding)
-                .padding(vertical = 32.dp, horizontal = 32.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text("1-st Activity", fontSize = 24.sp, modifier=Modifier.padding(16.dp))
             SecondActivityBtn (
                 onClick = {
                     context.startActivity(Intent(context, SecondActivity::class.java))
