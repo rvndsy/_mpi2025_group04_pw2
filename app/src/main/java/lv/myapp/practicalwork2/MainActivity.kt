@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import lv.myapp.practicalwork2.ui.theme.PracticalWork2Theme
 import androidx.compose.ui.unit.dp
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.getValue
@@ -52,9 +53,15 @@ fun MainScreen() {
 
     if (showDialog) {
         Dialog (
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = {
+                Toast.makeText(context,"You closed dialog",Toast.LENGTH_SHORT).show()
+                showDialog = false
+            },
             dialogTitle = "#4 Group's Dialog",
-            onConfirmation = { showDialog = false }
+            onConfirmation = {
+                // show toast but dont close dialog
+                Toast.makeText(context,"You clicked OK",Toast.LENGTH_SHORT).show()
+            }
         ) {
             DialogContent(
                 checked1 = checked1,
@@ -62,9 +69,13 @@ fun MainScreen() {
                 onChecked1Change = {
                     // "it" is the default arg of 1 arg lambdas
                     checked1 = it
+                    val text = "Ričards Didriksons " + (if (it) "checked" else "unchecked")
+                    Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
                 },
                 onChecked2Change = {
                     checked2 = it
+                    val text = "Elvis Ritiņš " + (if (it) "checked" else "unchecked")
+                    Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
                 }
             )
         }
