@@ -15,20 +15,25 @@ import androidx.compose.ui.platform.LocalContext
 import lv.myapp.practicalwork2.ui.theme.PracticalWork2Theme
 import androidx.compose.ui.unit.dp
 import android.content.Intent;
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 
 class SecondActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            PracticalWork2Theme {  // 👈 Apply the same theme here
-                SecondScreen()     // 👈 Your composable for this screen
+            PracticalWork2Theme {
+                SecondScreen()
             }
         }
     }
 }
 
 @Composable
+@Preview
 fun SecondScreen() {
     val context = LocalContext.current
 
@@ -36,8 +41,11 @@ fun SecondScreen() {
         Column (
             modifier = Modifier
                 .padding(paddingValues = innerPadding)
-                .padding(vertical = 32.dp, horizontal = 32.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text("2-nd Activity", fontSize = 24.sp, modifier=Modifier.padding(16.dp))
             BackBtn (
                 onClick = {
                     context.startActivity(Intent(context, MainActivity::class.java))
@@ -51,6 +59,6 @@ fun BackBtn(onClick: () -> Unit) {
     Button(
         onClick = onClick,
     ) {
-        Text(text = "Go Back")
+        Text(text = "Back")
     }
 }
