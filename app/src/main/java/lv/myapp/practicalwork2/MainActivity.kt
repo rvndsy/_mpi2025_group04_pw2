@@ -18,8 +18,11 @@ import androidx.compose.ui.platform.LocalContext
 import lv.myapp.practicalwork2.ui.theme.PracticalWork2Theme
 import androidx.compose.ui.unit.dp
 import android.content.Intent
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,17 +37,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+@Preview
 fun MainScreen() {
     val context = LocalContext.current
     // manage dialog state
     // changes to the variable force recomposition of composables that use it
-    val showDialog = remember { mutableStateOf(false) }
+    // use by instead of = to preserve the type and not have to do .value
+    var showDialog by remember { mutableStateOf(false) }
 
-    if (showDialog.value) {
-        Dialog(
-            onDismissRequest = { showDialog.value = false },
+    if (showDialog) {
+        Dialog (
+            onDismissRequest = { showDialog = false },
             dialogTitle = "#4 Group's Dialog",
-            onConfirmation = { showDialog.value = false }
+            onConfirmation = { showDialog = false }
         )
     }
 
@@ -61,7 +66,7 @@ fun MainScreen() {
             )
             DialogBtn (
                 onClick = {
-                    showDialog.value = true
+                    showDialog = true
                 }
             )
         }
@@ -112,5 +117,15 @@ fun Dialog(
                 Text("Close")
             }
         }
+    )
+}
+
+@Composable
+@Preview
+fun DialogPreview() {
+    Dialog(
+        onDismissRequest = {},
+        onConfirmation = {},
+        dialogTitle = "Preview"
     )
 }
